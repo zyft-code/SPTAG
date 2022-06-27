@@ -162,6 +162,23 @@ namespace SPTAG
             }
             return nullptr;
         }
+
+#ifndef _MSC_VER
+#define DIFF128 diff128
+#define DIFF256 diff256
+#else
+#define DIFF128 diff128.m128_f32
+#define DIFF256 diff256.m256_f32
+#endif
+
+#define REPEAT(type, ctype, delta, load, exec, acc, result) \
+            { \
+                type c1 = load((ctype *)(pX)); \
+                type c2 = load((ctype *)(pY)); \
+                pX += delta; pY += delta; \
+                result = acc(result, exec(c1, c2)); \
+            } \
+
     }
 }
 

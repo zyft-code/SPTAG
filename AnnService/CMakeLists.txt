@@ -12,6 +12,9 @@ file(GLOB_RECURSE SRC_FILES ${AnnService}/src/Core/*.cpp ${AnnService}/src/Helpe
 
 list(REMOVE_ITEM HDR_FILES
     ${AnnService}/inc/Core/Common/DistanceUtils.h
+    ${AnnService}/inc/Core/Common/DistanceUtilsSSE.h
+    ${AnnService}/inc/Core/Common/DistanceUtilsAVX.h
+    ${AnnService}/inc/Core/Common/DistanceUtilsAVX512.h
     ${AnnService}/inc/Core/Common/SIMDUtils.h 
     ${AnnService}/inc/Core/Common/InstructionUtils.h
     ${AnnService}/inc/Core/Common/CommonUtils.h
@@ -19,22 +22,33 @@ list(REMOVE_ITEM HDR_FILES
 
 list(REMOVE_ITEM SRC_FILES
     ${AnnService}/src/Core/Common/DistanceUtils.cpp
+    ${AnnService}/src/Core/Common/DistanceUtilsSSE.cpp
+    ${AnnService}/src/Core/Common/DistanceUtilsAVX.cpp
+    ${AnnService}/src/Core/Common/DistanceUtilsAVX512.cpp
     ${AnnService}/src/Core/Common/SIMDUtils.cpp
     ${AnnService}/src/Core/Common/InstructionUtils.cpp
     )
 
 add_library (DistanceUtils STATIC 
     inc/Core/Common/DistanceUtils.h
+    inc/Core/Common/DistanceUtilsSSE.h
+    inc/Core/Common/DistanceUtilsAVX.h
+    inc/Core/Common/DistanceUtilsAVX512.h
     inc/Core/Common/SIMDUtils.h
     inc/Core/Common/InstructionUtils.h
     inc/Core/Common/CommonUtils.h
-    src/Core/Common/DistanceUtils.cpp
+    src/Core/Common/DistanceUtilsSSE.cpp
+    src/Core/Common/DistanceUtilsAVX.cpp
+    src/Core/Common/DistanceUtilsAVX512.cpp
     src/Core/Common/SIMDUtils.cpp
     src/Core/Common/InstructionUtils.cpp
     )
 
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
-    target_compile_options(DistanceUtils PRIVATE -mavx2 -mavx -msse -msse2 -mavx512f -mavx512bw -mavx512dq -fPIC)
+    target_compile_options(DistanceUtils PRIVATE -fPIC)
+    set_source_files_properties(${AnnService}/src/Core/Common/DistanceUtilsSSE.cpp PROPERTIES COMPILE_FLAGS "-msse") # -msse2
+    set_source_files_properties(${AnnService}/src/Core/Common/DistanceUtilsAVX.cpp PROPERTIES COMPILE_FLAGS "-msse -mavx -mavx2")
+    set_source_files_properties(${AnnService}/src/Core/Common/DistanceUtilsAVX512.cpp PROPERTIES COMPILE_FLAGS "-msse -mavx -mavx512f -mavx512bw -mavx512dq")
 endif()
 
 add_library (SPTAGLib SHARED ${SRC_FILES} ${HDR_FILES})
