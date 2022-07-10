@@ -15,7 +15,12 @@ using namespace SPTAG::COMMON;
 #define DIFF256 diff256.m256_f32
 #endif
 
-inline __m128 _mm_mul_epi8(__m128i X, __m128i Y)
+DistanceUtils::DistanceUtils()
+{
+	InstructionSet::AVX512();
+}
+
+if_SSE(inline __m128 _mm_mul_epi8)(__m128i X, __m128i Y)
 {
     __m128i zero = _mm_setzero_si128();
 
@@ -30,7 +35,7 @@ inline __m128 _mm_mul_epi8(__m128i X, __m128i Y)
     return _mm_cvtepi32_ps(_mm_add_epi32(_mm_madd_epi16(xlo, ylo), _mm_madd_epi16(xhi, yhi)));
 }
 
-inline __m128 _mm_sqdf_epi8(__m128i X, __m128i Y)
+if_SSE(inline __m128 _mm_sqdf_epi8)(__m128i X, __m128i Y)
 {
     __m128i zero = _mm_setzero_si128();
 
@@ -48,7 +53,7 @@ inline __m128 _mm_sqdf_epi8(__m128i X, __m128i Y)
     return _mm_cvtepi32_ps(_mm_add_epi32(_mm_madd_epi16(dlo, dlo), _mm_madd_epi16(dhi, dhi)));
 }
 
-inline __m128 _mm_mul_epu8(__m128i X, __m128i Y)
+if_SSE(inline __m128 _mm_mul_epu8)(__m128i X, __m128i Y)
 {
     __m128i zero = _mm_setzero_si128();
 
@@ -60,7 +65,7 @@ inline __m128 _mm_mul_epu8(__m128i X, __m128i Y)
     return _mm_cvtepi32_ps(_mm_add_epi32(_mm_madd_epi16(xlo, ylo), _mm_madd_epi16(xhi, yhi)));
 }
 
-inline __m128 _mm_sqdf_epu8(__m128i X, __m128i Y)
+if_SSE(inline __m128 _mm_sqdf_epu8)(__m128i X, __m128i Y)
 {
     __m128i zero = _mm_setzero_si128();
 
@@ -75,12 +80,12 @@ inline __m128 _mm_sqdf_epu8(__m128i X, __m128i Y)
     return _mm_cvtepi32_ps(_mm_add_epi32(_mm_madd_epi16(dlo, dlo), _mm_madd_epi16(dhi, dhi)));
 }
 
-inline __m128 _mm_mul_epi16(__m128i X, __m128i Y)
+if_SSE(inline __m128 _mm_mul_epi16)(__m128i X, __m128i Y)
 {
     return _mm_cvtepi32_ps(_mm_madd_epi16(X, Y));
 }
 
-inline __m128 _mm_sqdf_epi16(__m128i X, __m128i Y)
+if_SSE(inline __m128 _mm_sqdf_epi16)(__m128i X, __m128i Y)
 {
     __m128i zero = _mm_setzero_si128();
 
@@ -98,13 +103,13 @@ inline __m128 _mm_sqdf_epi16(__m128i X, __m128i Y)
     return _mm_add_ps(_mm_mul_ps(dlo, dlo), _mm_mul_ps(dhi, dhi));
 }
 
-inline __m128 _mm_sqdf_ps(__m128 X, __m128 Y)
+if_SSE(inline __m128 _mm_sqdf_ps)(__m128 X, __m128 Y)
 {
     __m128 d = _mm_sub_ps(X, Y);
     return _mm_mul_ps(d, d);
 }
 
-inline __m256 _mm256_mul_epi8(__m256i X, __m256i Y)
+if_AVX2(inline __m256 _mm256_mul_epi8)(__m256i X, __m256i Y)
 {
     __m256i zero = _mm256_setzero_si256();
 
@@ -119,7 +124,7 @@ inline __m256 _mm256_mul_epi8(__m256i X, __m256i Y)
     return _mm256_cvtepi32_ps(_mm256_add_epi32(_mm256_madd_epi16(xlo, ylo), _mm256_madd_epi16(xhi, yhi)));
 }
 
-inline __m256 _mm256_sqdf_epi8(__m256i X, __m256i Y)
+f_AVX2(__m256 _mm256_sqdf_epi8)(__m256i X, __m256i Y)
 {
     __m256i zero = _mm256_setzero_si256();
 
@@ -137,7 +142,7 @@ inline __m256 _mm256_sqdf_epi8(__m256i X, __m256i Y)
     return _mm256_cvtepi32_ps(_mm256_add_epi32(_mm256_madd_epi16(dlo, dlo), _mm256_madd_epi16(dhi, dhi)));
 }
 
-inline __m256 _mm256_mul_epu8(__m256i X, __m256i Y)
+if_AVX2(inline __m256 _mm256_mul_epu8)(__m256i X, __m256i Y)
 {
     __m256i zero = _mm256_setzero_si256();
 
@@ -149,7 +154,7 @@ inline __m256 _mm256_mul_epu8(__m256i X, __m256i Y)
     return _mm256_cvtepi32_ps(_mm256_add_epi32(_mm256_madd_epi16(xlo, ylo), _mm256_madd_epi16(xhi, yhi)));
 }
 
-inline __m256 _mm256_sqdf_epu8(__m256i X, __m256i Y)
+if_AVX2(inline __m256 _mm256_sqdf_epu8)(__m256i X, __m256i Y)
 {
     __m256i zero = _mm256_setzero_si256();
 
@@ -164,12 +169,12 @@ inline __m256 _mm256_sqdf_epu8(__m256i X, __m256i Y)
     return _mm256_cvtepi32_ps(_mm256_add_epi32(_mm256_madd_epi16(dlo, dlo), _mm256_madd_epi16(dhi, dhi)));
 }
 
-inline __m256 _mm256_mul_epi16(__m256i X, __m256i Y)
+if_AVX2(inline __m256 _mm256_mul_epi16)(__m256i X, __m256i Y)
 {
     return _mm256_cvtepi32_ps(_mm256_madd_epi16(X, Y));
 }
 
-inline __m256 _mm256_sqdf_epi16(__m256i X, __m256i Y)
+if_AVX2(inline __m256 _mm256_sqdf_epi16)(__m256i X, __m256i Y)
 {
     __m256i zero = _mm256_setzero_si256();
 
@@ -187,7 +192,7 @@ inline __m256 _mm256_sqdf_epi16(__m256i X, __m256i Y)
     return _mm256_add_ps(_mm256_mul_ps(dlo, dlo), _mm256_mul_ps(dhi, dhi));
 }
 
-inline __m256 _mm256_sqdf_ps(__m256 X, __m256 Y)
+if_AVX(inline __m256 _mm256_sqdf_ps)(__m256 X, __m256 Y)
 {
     __m256 d = _mm256_sub_ps(X, Y);
     return _mm256_mul_ps(d, d);
@@ -195,7 +200,7 @@ inline __m256 _mm256_sqdf_ps(__m256 X, __m256 Y)
 
 // Do not use intrinsics not supported by old MS compiler version
 #if (!defined _MSC_VER) || (_MSC_VER >= 1920)
-inline __m512 _mm512_mul_epi8(__m512i X, __m512i Y)
+if_AVX512(inline __m512 _mm512_mul_epi8)(__m512i X, __m512i Y)
 {
     __m512i zero = _mm512_setzero_si512();
 
@@ -213,7 +218,7 @@ inline __m512 _mm512_mul_epi8(__m512i X, __m512i Y)
     return _mm512_cvtepi32_ps(_mm512_add_epi32(_mm512_madd_epi16(xlo, ylo), _mm512_madd_epi16(xhi, yhi)));
 }
 
-inline __m512 _mm512_sqdf_epi8(__m512i X, __m512i Y)
+if_AVX512(inline __m512 _mm512_sqdf_epi8)(__m512i X, __m512i Y)
 {
     __m512i zero = _mm512_setzero_si512();
 
@@ -234,7 +239,7 @@ inline __m512 _mm512_sqdf_epi8(__m512i X, __m512i Y)
     return _mm512_cvtepi32_ps(_mm512_add_epi32(_mm512_madd_epi16(dlo, dlo), _mm512_madd_epi16(dhi, dhi)));
 }
 
-inline __m512 _mm512_mul_epu8(__m512i X, __m512i Y)
+if_AVX512(inline __m512 _mm512_mul_epu8)(__m512i X, __m512i Y)
 {
     __m512i zero = _mm512_setzero_si512();
 
@@ -246,7 +251,7 @@ inline __m512 _mm512_mul_epu8(__m512i X, __m512i Y)
     return _mm512_cvtepi32_ps(_mm512_add_epi32(_mm512_madd_epi16(xlo, ylo), _mm512_madd_epi16(xhi, yhi)));
 }
 
-inline __m512 _mm512_sqdf_epu8(__m512i X, __m512i Y)
+if_AVX512(inline __m512 _mm512_sqdf_epu8)(__m512i X, __m512i Y)
 {
     __m512i zero = _mm512_setzero_si512();
 
@@ -261,12 +266,12 @@ inline __m512 _mm512_sqdf_epu8(__m512i X, __m512i Y)
     return _mm512_cvtepi32_ps(_mm512_add_epi32(_mm512_madd_epi16(dlo, dlo), _mm512_madd_epi16(dhi, dhi)));
 }
 
-inline __m512 _mm512_mul_epi16(__m512i X, __m512i Y)
+if_AVX512(inline __m512 _mm512_mul_epi16)(__m512i X, __m512i Y)
 {
     return _mm512_cvtepi32_ps(_mm512_madd_epi16(X, Y));
 }
 
-inline __m512 _mm512_sqdf_epi16(__m512i X, __m512i Y)
+if_AVX512(inline __m512 _mm512_sqdf_epi16)(__m512i X, __m512i Y)
 {
     __m512i zero = _mm512_setzero_si512();
 
@@ -287,7 +292,7 @@ inline __m512 _mm512_sqdf_epi16(__m512i X, __m512i Y)
     return _mm512_add_ps(_mm512_mul_ps(dlo, dlo), _mm512_mul_ps(dhi, dhi));
 }
 
-inline __m512 _mm512_sqdf_ps(__m512 X, __m512 Y)
+if_AVX512(inline __m512 _mm512_sqdf_ps)(__m512 X, __m512 Y)
 {
     __m512 d = _mm512_sub_ps(X, Y);
     return _mm512_mul_ps(d, d);
@@ -303,7 +308,7 @@ inline __m512 _mm512_sqdf_ps(__m512 X, __m512 Y)
                 result = acc(result, exec(c1, c2)); \
             } \
 
-float DistanceUtils::ComputeL2Distance_SSE(const std::int8_t* pX, const std::int8_t* pY, DimensionType length)
+f_SSE(float DistanceUtils::ComputeL2Distance)(const std::int8_t* pX, const std::int8_t* pY, DimensionType length)
 {
     const std::int8_t* pEnd32 = pX + ((length >> 5) << 5);
     const std::int8_t* pEnd16 = pX + ((length >> 4) << 4);
@@ -332,7 +337,7 @@ float DistanceUtils::ComputeL2Distance_SSE(const std::int8_t* pX, const std::int
     return diff;
 }
 
-float DistanceUtils::ComputeL2Distance_AVX(const std::int8_t* pX, const std::int8_t* pY, DimensionType length)
+f_AVX(float DistanceUtils::ComputeL2Distance)(const std::int8_t* pX, const std::int8_t* pY, DimensionType length)
 {
     const std::int8_t* pEnd32 = pX + ((length >> 5) << 5);
     const std::int8_t* pEnd16 = pX + ((length >> 4) << 4);
@@ -361,7 +366,7 @@ float DistanceUtils::ComputeL2Distance_AVX(const std::int8_t* pX, const std::int
     return diff;
 }
 
-float DistanceUtils::ComputeL2Distance_AVX512(const std::int8_t* pX, const std::int8_t* pY, DimensionType length)
+f_AVX512(float DistanceUtils::ComputeL2Distance)(const std::int8_t* pX, const std::int8_t* pY, DimensionType length)
 {
     const std::int8_t* pEnd32 = pX + ((length >> 5) << 5);
     const std::int8_t* pEnd16 = pX + ((length >> 4) << 4);
@@ -400,7 +405,7 @@ float DistanceUtils::ComputeL2Distance_AVX512(const std::int8_t* pX, const std::
     return diff;
 }
 
-float DistanceUtils::ComputeL2Distance_SSE(const std::uint8_t* pX, const std::uint8_t* pY, DimensionType length)
+f_SSE(float DistanceUtils::ComputeL2Distance)(const std::uint8_t* pX, const std::uint8_t* pY, DimensionType length)
 {
     const std::uint8_t* pEnd32 = pX + ((length >> 5) << 5);
     const std::uint8_t* pEnd16 = pX + ((length >> 4) << 4);
@@ -429,7 +434,7 @@ float DistanceUtils::ComputeL2Distance_SSE(const std::uint8_t* pX, const std::ui
     return diff;
 }
 
-float DistanceUtils::ComputeL2Distance_AVX(const std::uint8_t* pX, const std::uint8_t* pY, DimensionType length)
+f_AVX(float DistanceUtils::ComputeL2Distance)(const std::uint8_t* pX, const std::uint8_t* pY, DimensionType length)
 {
     const std::uint8_t* pEnd32 = pX + ((length >> 5) << 5);
     const std::uint8_t* pEnd16 = pX + ((length >> 4) << 4);
@@ -458,7 +463,7 @@ float DistanceUtils::ComputeL2Distance_AVX(const std::uint8_t* pX, const std::ui
     return diff;
 }
 
-float DistanceUtils::ComputeL2Distance_AVX512(const std::uint8_t* pX, const std::uint8_t* pY, DimensionType length)
+f_AVX512(float DistanceUtils::ComputeL2Distance)(const std::uint8_t* pX, const std::uint8_t* pY, DimensionType length)
 {
     const std::uint8_t* pEnd32 = pX + ((length >> 5) << 5);
     const std::uint8_t* pEnd16 = pX + ((length >> 4) << 4);
@@ -497,7 +502,7 @@ float DistanceUtils::ComputeL2Distance_AVX512(const std::uint8_t* pX, const std:
     return diff;
 }
 
-float DistanceUtils::ComputeL2Distance_SSE(const std::int16_t* pX, const std::int16_t* pY, DimensionType length)
+f_SSE(float DistanceUtils::ComputeL2Distance)(const std::int16_t* pX, const std::int16_t* pY, DimensionType length)
 {
     const std::int16_t* pEnd16 = pX + ((length >> 4) << 4);
     const std::int16_t* pEnd8 = pX + ((length >> 3) << 3);
@@ -527,7 +532,7 @@ float DistanceUtils::ComputeL2Distance_SSE(const std::int16_t* pX, const std::in
     return diff;
 }
 
-float DistanceUtils::ComputeL2Distance_AVX(const std::int16_t* pX, const std::int16_t* pY, DimensionType length)
+f_AVX(float DistanceUtils::ComputeL2Distance)(const std::int16_t* pX, const std::int16_t* pY, DimensionType length)
 {
     const std::int16_t* pEnd16 = pX + ((length >> 4) << 4);
     const std::int16_t* pEnd8 = pX + ((length >> 3) << 3);
@@ -557,7 +562,7 @@ float DistanceUtils::ComputeL2Distance_AVX(const std::int16_t* pX, const std::in
     return diff;
 }
 
-float DistanceUtils::ComputeL2Distance_AVX512(const std::int16_t* pX, const std::int16_t* pY, DimensionType length)
+f_AVX512(float DistanceUtils::ComputeL2Distance)(const std::int16_t* pX, const std::int16_t* pY, DimensionType length)
 {
     const std::int16_t* pEnd16 = pX + ((length >> 4) << 4);
     const std::int16_t* pEnd8 = pX + ((length >> 3) << 3);
@@ -597,7 +602,7 @@ float DistanceUtils::ComputeL2Distance_AVX512(const std::int16_t* pX, const std:
     return diff;
 }
 
-float DistanceUtils::ComputeL2Distance_SSE(const float* pX, const float* pY, DimensionType length)
+f_SSE(float DistanceUtils::ComputeL2Distance)(const float* pX, const float* pY, DimensionType length)
 {
     const float* pEnd16 = pX + ((length >> 4) << 4);
     const float* pEnd4 = pX + ((length >> 2) << 2);
@@ -623,7 +628,7 @@ float DistanceUtils::ComputeL2Distance_SSE(const float* pX, const float* pY, Dim
     return diff;
 }
 
-float DistanceUtils::ComputeL2Distance_AVX(const float* pX, const float* pY, DimensionType length)
+f_AVX(float DistanceUtils::ComputeL2Distance)(const float* pX, const float* pY, DimensionType length)
 {
     const float* pEnd16 = pX + ((length >> 4) << 4);
     const float* pEnd4 = pX + ((length >> 2) << 2);
@@ -648,7 +653,7 @@ float DistanceUtils::ComputeL2Distance_AVX(const float* pX, const float* pY, Dim
     return diff;
 }
 
-float DistanceUtils::ComputeL2Distance_AVX512(const float* pX, const float* pY, DimensionType length)
+f_AVX512(float DistanceUtils::ComputeL2Distance)(const float* pX, const float* pY, DimensionType length)
 {
     const float* pEnd8 = pX + ((length >> 3) << 3);
     const float* pEnd4 = pX + ((length >> 2) << 2);
@@ -682,7 +687,7 @@ float DistanceUtils::ComputeL2Distance_AVX512(const float* pX, const float* pY, 
     return diff;
 }
 
-float DistanceUtils::ComputeCosineDistance_SSE(const std::int8_t* pX, const std::int8_t* pY, DimensionType length)
+f_SSE(float DistanceUtils::ComputeCosineDistance)(const std::int8_t* pX, const std::int8_t* pY, DimensionType length)
 {
     const std::int8_t* pEnd32 = pX + ((length >> 5) << 5);
     const std::int8_t* pEnd16 = pX + ((length >> 4) << 4);
@@ -710,7 +715,7 @@ float DistanceUtils::ComputeCosineDistance_SSE(const std::int8_t* pX, const std:
     return 16129 - diff;
 }
 
-float DistanceUtils::ComputeCosineDistance_AVX(const std::int8_t* pX, const std::int8_t* pY, DimensionType length)
+f_AVX(float DistanceUtils::ComputeCosineDistance)(const std::int8_t* pX, const std::int8_t* pY, DimensionType length)
 {
     const std::int8_t* pEnd32 = pX + ((length >> 5) << 5);
     const std::int8_t* pEnd16 = pX + ((length >> 4) << 4);
@@ -738,7 +743,7 @@ float DistanceUtils::ComputeCosineDistance_AVX(const std::int8_t* pX, const std:
     return 16129 - diff;
 }
 
-float DistanceUtils::ComputeCosineDistance_AVX512(const std::int8_t* pX, const std::int8_t* pY, DimensionType length)
+f_AVX512(float DistanceUtils::ComputeCosineDistance)(const std::int8_t* pX, const std::int8_t* pY, DimensionType length)
 {
     const std::int8_t* pEnd32 = pX + ((length >> 5) << 5);
     const std::int8_t* pEnd16 = pX + ((length >> 4) << 4);
@@ -776,7 +781,7 @@ float DistanceUtils::ComputeCosineDistance_AVX512(const std::int8_t* pX, const s
     return 16129 - diff;
 }
 
-float DistanceUtils::ComputeCosineDistance_SSE(const std::uint8_t* pX, const std::uint8_t* pY, DimensionType length)
+f_SSE(float DistanceUtils::ComputeCosineDistance)(const std::uint8_t* pX, const std::uint8_t* pY, DimensionType length)
 {
     const std::uint8_t* pEnd32 = pX + ((length >> 5) << 5);
     const std::uint8_t* pEnd16 = pX + ((length >> 4) << 4);
@@ -804,7 +809,7 @@ float DistanceUtils::ComputeCosineDistance_SSE(const std::uint8_t* pX, const std
     return 65025 - diff;
 }
 
-float DistanceUtils::ComputeCosineDistance_AVX(const std::uint8_t* pX, const std::uint8_t* pY, DimensionType length)
+f_AVX(float DistanceUtils::ComputeCosineDistance)(const std::uint8_t* pX, const std::uint8_t* pY, DimensionType length)
 {
     const std::uint8_t* pEnd32 = pX + ((length >> 5) << 5);
     const std::uint8_t* pEnd16 = pX + ((length >> 4) << 4);
@@ -832,7 +837,7 @@ float DistanceUtils::ComputeCosineDistance_AVX(const std::uint8_t* pX, const std
     return 65025 - diff;
 }
 
-float DistanceUtils::ComputeCosineDistance_AVX512(const std::uint8_t* pX, const std::uint8_t* pY, DimensionType length)
+f_AVX512(float DistanceUtils::ComputeCosineDistance)(const std::uint8_t* pX, const std::uint8_t* pY, DimensionType length)
 {
     const std::uint8_t* pEnd32 = pX + ((length >> 5) << 5);
     const std::uint8_t* pEnd16 = pX + ((length >> 4) << 4);
@@ -870,7 +875,7 @@ float DistanceUtils::ComputeCosineDistance_AVX512(const std::uint8_t* pX, const 
     return 65025 - diff;
 }
 
-float DistanceUtils::ComputeCosineDistance_SSE(const std::int16_t* pX, const std::int16_t* pY, DimensionType length)
+f_SSE(float DistanceUtils::ComputeCosineDistance)(const std::int16_t* pX, const std::int16_t* pY, DimensionType length)
 {
     const std::int16_t* pEnd16 = pX + ((length >> 4) << 4);
     const std::int16_t* pEnd8 = pX + ((length >> 3) << 3);
@@ -899,7 +904,7 @@ float DistanceUtils::ComputeCosineDistance_SSE(const std::int16_t* pX, const std
     return  1073676289 - diff;
 }
 
-float DistanceUtils::ComputeCosineDistance_AVX(const std::int16_t* pX, const std::int16_t* pY, DimensionType length)
+f_AVX(float DistanceUtils::ComputeCosineDistance)(const std::int16_t* pX, const std::int16_t* pY, DimensionType length)
 {
     const std::int16_t* pEnd16 = pX + ((length >> 4) << 4);
     const std::int16_t* pEnd8 = pX + ((length >> 3) << 3);
@@ -928,7 +933,7 @@ float DistanceUtils::ComputeCosineDistance_AVX(const std::int16_t* pX, const std
     return  1073676289 - diff;
 }
 
-float DistanceUtils::ComputeCosineDistance_AVX512(const std::int16_t* pX, const std::int16_t* pY, DimensionType length)
+f_AVX512(float DistanceUtils::ComputeCosineDistance)(const std::int16_t* pX, const std::int16_t* pY, DimensionType length)
 {
     const std::int16_t* pEnd16 = pX + ((length >> 4) << 4);
     const std::int16_t* pEnd8 = pX + ((length >> 3) << 3);
@@ -967,7 +972,7 @@ float DistanceUtils::ComputeCosineDistance_AVX512(const std::int16_t* pX, const 
     return  1073676289 - diff;
 }
 
-float DistanceUtils::ComputeCosineDistance_SSE(const float* pX, const float* pY, DimensionType length)
+f_SSE(float DistanceUtils::ComputeCosineDistance)(const float* pX, const float* pY, DimensionType length)
 {
     const float* pEnd16 = pX + ((length >> 4) << 4);
     const float* pEnd4 = pX + ((length >> 2) << 2);
@@ -991,7 +996,7 @@ float DistanceUtils::ComputeCosineDistance_SSE(const float* pX, const float* pY,
     return 1 - diff;
 }
 
-float DistanceUtils::ComputeCosineDistance_AVX(const float* pX, const float* pY, DimensionType length)
+f_AVX(float DistanceUtils::ComputeCosineDistance)(const float* pX, const float* pY, DimensionType length)
 {
     const float* pEnd16 = pX + ((length >> 4) << 4);
     const float* pEnd4 = pX + ((length >> 2) << 2);
@@ -1014,7 +1019,7 @@ float DistanceUtils::ComputeCosineDistance_AVX(const float* pX, const float* pY,
     return 1 - diff;
 }
 
-float DistanceUtils::ComputeCosineDistance_AVX512(const float* pX, const float* pY, DimensionType length)
+f_AVX512(float DistanceUtils::ComputeCosineDistance)(const float* pX, const float* pY, DimensionType length)
 {
     const float* pEnd8 = pX + ((length >> 3) << 3);
     const float* pEnd4 = pX + ((length >> 2) << 2);
