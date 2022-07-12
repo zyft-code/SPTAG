@@ -2,7 +2,9 @@
 // Licensed under the MIT License.
 
 #include "inc/Core/Common/SIMDUtils.h"
-#include <immintrin.h>
+#include <simde/x86/avx.h>
+#include <simde/x86/avx2.h>
+#include <simde/x86/avx512.h>
 
 using namespace SPTAG;
 using namespace SPTAG::COMMON;

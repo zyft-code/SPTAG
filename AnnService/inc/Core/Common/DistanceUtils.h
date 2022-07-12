@@ -4,7 +4,7 @@
 #ifndef _SPTAG_COMMON_DISTANCEUTILS_H_
 #define _SPTAG_COMMON_DISTANCEUTILS_H_
 
-#include <xmmintrin.h>
+#include <simde/x86/sse.h>
 #include <functional>
 #include <iostream>
 

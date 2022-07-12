@@ -2,7 +2,21 @@
 // Licensed under the MIT License.
 
 #include "inc/Core/Common/DistanceUtils.h"
-#include <immintrin.h>
+#include <simde/x86/avx.h>
+#include <simde/x86/avx2.h>
+#include <simde/x86/avx512.h>
+
+#ifndef __mmask32
+#define __mmask32 simde__mmask32
+#endif
+
+#ifndef __mmask64
+#define __mmask64 simde__mmask64
+#endif
+
+#ifndef _mm512_setzero_ps
+#define _mm512_setzero_ps simde_mm512_setzero_ps
+#endif
 
 using namespace SPTAG;
 using namespace SPTAG::COMMON;
